@@ -89,25 +89,25 @@ c.bullseye = c.mult_segment_even;
 // seg_gen is for segment generator
 var seg_gen = {};
 seg_gen.leftX = function(len) {
-	return Math.round(
+	return (
 		n.center + len *
 		Math.cos(Math.radians(270-n.segment_rotation/2))
 	);
 };
 seg_gen.leftY = function(len) {
-	return Math.round(
+	return (
 		n.center + len *
 		Math.sin(Math.radians(270-n.segment_rotation/2))
 	);
 };
 seg_gen.rightX = function(len) {
-	return Math.round(
+	return (
 		n.center + len *
 		Math.cos(Math.radians(270+n.segment_rotation/2))
 	);
 };
 seg_gen.rightY = function(len) {
-	return Math.round(
+	return (
 		n.center + len *
 		Math.sin(Math.radians(270+n.segment_rotation/2))
 	);
@@ -116,12 +116,12 @@ seg_gen.rightY = function(len) {
 
 var main_segment_shape =
 		'M' + // start on center
-		Math.round(n.center) + ',' + Math.round(n.center) +
+		n.center + ',' + n.center +
 		' L' + // link to left point
 		seg_gen.leftX(n.main_r) + ',' +
 		seg_gen.leftY(n.main_r) + ' ' +
 		'A' + // arc to
-		Math.round(n.main_r) + ',' + Math.round(n.main_r) +
+		n.main_r + ',' + n.main_r +
 		' 0 0,1 ' +
 		// right point
 		seg_gen.rightX(n.main_r) + ',' +
@@ -133,7 +133,7 @@ function generateSegmentPart(outlen, inlen) {
 		seg_gen.leftX(outlen) + ',' +
 		seg_gen.leftY(outlen) + ' ' +
 		'A' +
-		Math.round(outlen) + ',' + Math.round(outlen) +
+		outlen + ',' + outlen +
 		' 0 0,1' +
 		seg_gen.rightX(outlen) + ',' +
 		seg_gen.rightY(outlen) + ' ' +
@@ -141,7 +141,7 @@ function generateSegmentPart(outlen, inlen) {
 		seg_gen.rightX(inlen) + ',' +
 		seg_gen.rightY(inlen) + ' ' +
 		'A' +
-		Math.round(inlen) + ',' + Math.round(inlen) +
+		inlen + ',' + inlen +
 		' 0 0,0' +
 		seg_gen.leftX(inlen) + ',' +
 		seg_gen.leftY(inlen);
@@ -165,6 +165,7 @@ var lightdown = function() {
 		});
 	});
 };
+
 
 function color_main_segments(i) {
 	if (i % 2 === 0) {
