@@ -4,16 +4,13 @@ function drawingTest() {
 		var draw = SVG('drawing').size(n.scale,n.scale);
 
 		var outerboard = draw.circle(n.scale);
-		outerboard.fill(c.outerboard);
-		set_attr.mouseevents(outerboard);
+		set_attr.outerboard(outerboard);
 
 		var main_segments = [];
 		var mult2_segments = [];
 		var mult3_segments = [];
 
-		// Generating main segments of the board
-		// TODO: There's gotta be a better (cleaner) way.
-		// this is madness.
+		// Generating segments of the board and its events and attributes
 		for (var i = 0; i < n.segments; i++) {
 			main_segments[i] = draw.path(main_segment_shape);
 			set_attr.main(main_segments[i], i);
@@ -28,14 +25,10 @@ function drawingTest() {
 		}
 
 			var bull = draw.circle().radius(n.bull_r);
-			bull.center(n.center, n.center);
-			bull.fill(c.bull);
-			set_attr.mouseevents(bull);
+			set_attr.bull(bull);
 
 			var bullseye = draw.circle().radius(n.bullseye_r);
-			bullseye.center(n.center, n.center);
-			bullseye.fill(c.bullseye);
-			set_attr.mouseevents(bullseye);
+			set_attr.bullseye(bullseye);
 	}
 	else {
 		alert('SVG not supported');
@@ -55,7 +48,7 @@ var n = {
 	segments: 20,
 	segment_rotation: 18
 };
-// I can't do that inside :( Why?
+// I can't do that inside :(
 n.center = n.scale/2;
 n.main_r = n.scale*0.42;
 n.mult2_out_r = n.main_r;
@@ -64,6 +57,10 @@ n.mult3_out_r = n.main_r*0.65;
 n.mult3_in_r = n.main_r*0.6;
 n.bull_r = n.main_r*0.1;
 n.bullseye_r = n.main_r*0.04;
+n.values = [20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
+n.bull_val = 25;
+n.bullseye_val = n.bull_val*2;
+n.missed_val = 0;
 
 // c is for colors
 var c = {
@@ -148,7 +145,7 @@ set_attr.mouseevents = function(shape) {
 set_attr.main = function(segment, i) {
 	set_attr.mouseevents(segment);
 	segment.rotate(n.segment_rotation*i, n.center, n.center);
-	segment.data({value: 1});
+	segment.data({value: n.values[i]});
 	segment.fill(color_main_segments(i));
 };
 
@@ -162,6 +159,26 @@ set_attr.mult3 = function(segment, i) {
 	set_attr.main(segment, i);
 	segment.fill(color_mult_segments(i));
 	segment.data({value: segment.data('value')*3});
+};
+
+set_attr.outerboard = function(shape) {
+	shape.fill(c.outerboard);
+	shape.data({value: n.missed_val});
+	set_attr.mouseevents(shape);
+};
+
+set_attr.bull = function (shape) {
+	shape.center(n.center, n.center);
+	shape.fill(c.bull);
+	shape.data({value: n.bull_val});
+	set_attr.mouseevents(shape);
+};
+
+set_attr.bullseye = function (shape) {
+	shape.center(n.center, n.center);
+	shape.fill(c.bullseye);
+	shape.data({value: n.bullseye_val});
+	set_attr.mouseevents(shape);
 };
 
 var lightup = function() {
