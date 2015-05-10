@@ -5,8 +5,7 @@ function drawingTest() {
 
 		var outerboard = draw.circle(n.scale);
 		outerboard.fill(c.outerboard);
-		outerboard.mouseover(lightup);
-		outerboard.mouseout(lightdown);
+		set_attr.mouseevents(outerboard);
 
 		var main_segments = [];
 		var mult2_segments = [];
@@ -17,35 +16,26 @@ function drawingTest() {
 		// this is madness.
 		for (var i = 0; i < n.segments; i++) {
 			main_segments[i] = draw.path(main_segment_shape);
-			main_segments[i].mouseover(lightup);
-			main_segments[i].mouseout(lightdown);
-			main_segments[i].rotate(n.segment_rotation*i, n.center, n.center);
-			main_segments[i].data({value: null});
-			main_segments[i].fill(color_main_segments(i));
+			set_attr.main(main_segments[i], i);
+
 			mult2_segments[i] = draw.path(generateSegmentPart(
 																		n.mult2_out_r, n.mult2_in_r));
-			mult2_segments[i].rotate(n.segment_rotation*i, n.center, n.center);
-			mult2_segments[i].fill(color_mult_segments(i));
-			mult2_segments[i].mouseover(lightup);
-			mult2_segments[i].mouseout(lightdown);
+			set_attr.mult2(mult2_segments[i], i);
+
 			mult3_segments[i] = draw.path(generateSegmentPart(
 																		n.mult3_out_r, n.mult3_in_r));
-			mult3_segments[i].rotate(n.segment_rotation*i, n.center, n.center);
-			mult3_segments[i].fill(color_mult_segments(i));
-			mult3_segments[i].mouseover(lightup);
-			mult3_segments[i].mouseout(lightdown);
-			}
+			set_attr.mult3(mult3_segments[i], i);
+		}
 
-			var bull = draw.circle(n.bull_r*2);
-			bull.move(n.center-n.bull_r, n.center-n.bull_r);
+			var bull = draw.circle().radius(n.bull_r);
+			bull.center(n.center, n.center);
 			bull.fill(c.bull);
-			bull.mouseover(lightup);
-			bull.mouseout(lightdown);
-			var bullseye = draw.circle(n.bullseye_r*2);
-			bullseye.move(n.center-n.bullseye_r, n.center-n.bullseye_r);
+			set_attr.mouseevents(bull);
+
+			var bullseye = draw.circle().radius(n.bullseye_r);
+			bullseye.center(n.center, n.center);
 			bullseye.fill(c.bullseye);
-			bullseye.mouseover(lightup);
-			bullseye.mouseout(lightdown);
+			set_attr.mouseevents(bullseye);
 	}
 	else {
 		alert('SVG not supported');
@@ -149,6 +139,30 @@ function generateSegmentPart(outlen, inlen) {
 		return shape;
 }
 
+var set_attr = {};
+set_attr.mouseevents = function(shape) {
+	shape.mouseover(lightup);
+	shape.mouseout(lightdown);
+};
+
+set_attr.main = function(segment, i) {
+	set_attr.mouseevents(segment);
+	segment.rotate(n.segment_rotation*i, n.center, n.center);
+	segment.data({value: 1});
+	segment.fill(color_main_segments(i));
+};
+
+set_attr.mult2 = function(segment, i) {
+	set_attr.main(segment, i);
+	segment.fill(color_mult_segments(i));
+	segment.data({value: segment.data('value')*2});
+};
+
+set_attr.mult3 = function(segment, i) {
+	set_attr.main(segment, i);
+	segment.fill(color_mult_segments(i));
+	segment.data({value: segment.data('value')*3});
+};
 
 var lightup = function() {
 	this.filter(function(add) {
