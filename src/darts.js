@@ -9,6 +9,7 @@ function drawingTest() {
 		var main_segments = [];
 		var mult2_segments = [];
 		var mult3_segments = [];
+		var points_text = [];
 
 		// Generating segments of the board and its events and attributes
 		for (var i = 0; i < n.segments; i++) {
@@ -22,13 +23,24 @@ function drawingTest() {
 			mult3_segments[i] = draw.path(generateSegmentPart(
 																		n.mult3_out_r, n.mult3_in_r));
 			set_attr.mult3(mult3_segments[i], i);
+
+			// THIS GOTTA GO INTO FUNCTION, but first let's ask someone
+			// with windows if he sees glorious Ubuntu Condensed
+			points_text[i] = draw.text(n.values[i].toString());
+			points_text[i].fill(c.main_segment_odd);
+			points_text[i].font({
+				family:   'Ubuntu Condensed',
+				size:     n.points_fontsize
+			});
+			points_text[i].center(point_calc.x(n.points_r, i*n.segment_rotation),
+														point_calc.y(n.points_r, i*n.segment_rotation) );
 		}
 
-			var bull = draw.circle().radius(n.bull_r);
-			set_attr.bull(bull);
+		var bull = draw.circle().radius(n.bull_r);
+		set_attr.bull(bull);
 
-			var bullseye = draw.circle().radius(n.bullseye_r);
-			set_attr.bullseye(bullseye);
+		var bullseye = draw.circle().radius(n.bullseye_r);
+		set_attr.bullseye(bullseye);
 	}
 	else {
 		alert('SVG not supported');
@@ -42,7 +54,7 @@ Math.radians = function(degrees) {
 };
 
 
-// n is for numbers
+// n is for numbers (meaning all numeric values used)
 var n = {
 	scale: window.innerHeight*0.8,
 	segments: 20,
@@ -57,6 +69,8 @@ n.mult3_out_r = n.main_r*0.65;
 n.mult3_in_r = n.main_r*0.6;
 n.bull_r = n.main_r*0.1;
 n.bullseye_r = n.main_r*0.04;
+n.points_fontsize = 0.35*(n.scale - n.main_r*2);
+n.points_r = n.main_r + n.points_fontsize/1.5;
 n.values = [20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
 n.bull_val = 25;
 n.bullseye_val = n.bull_val*2;
@@ -73,30 +87,42 @@ var c = {
 c.bull = c.mult_segment_odd;
 c.bullseye = c.mult_segment_even;
 
+// functions returning x and y based on angle and distance
+// from center. Angle 0 is understood as straight up.
+var point_calc = {};
+point_calc.x = function(dist, ang) {
+	return (
+		n.center + dist *
+		Math.cos(Math.radians(270+ang))
+	);
+};
+point_calc.y = function(dist, ang) {
+	return (
+		n.center + dist *
+		Math.sin(Math.radians(270+ang))
+	);
+};
+
 // seg_gen is for segment generator
 var seg_gen = {};
 seg_gen.leftX = function(len) {
 	return (
-		n.center + len *
-		Math.cos(Math.radians(270-n.segment_rotation/2))
+		point_calc.x(len, -n.segment_rotation/2)
 	);
 };
 seg_gen.leftY = function(len) {
 	return (
-		n.center + len *
-		Math.sin(Math.radians(270-n.segment_rotation/2))
+		point_calc.y(len, -n.segment_rotation/2)
 	);
 };
 seg_gen.rightX = function(len) {
 	return (
-		n.center + len *
-		Math.cos(Math.radians(270+n.segment_rotation/2))
+		point_calc.x(len, n.segment_rotation/2)
 	);
 };
 seg_gen.rightY = function(len) {
 	return (
-		n.center + len *
-		Math.sin(Math.radians(270+n.segment_rotation/2))
+		point_calc.y(len, n.segment_rotation/2)
 	);
 };
 
