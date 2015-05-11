@@ -24,16 +24,8 @@ function drawingTest() {
 																		n.mult3_out_r, n.mult3_in_r));
 			set_attr.mult3(mult3_segments[i], i);
 
-			// THIS GOTTA GO INTO FUNCTION, but first let's ask someone
-			// with windows if he sees glorious Ubuntu Condensed
 			points_text[i] = draw.text(n.values[i].toString());
-			points_text[i].fill(c.main_segment_odd);
-			points_text[i].font({
-				family:   'Ubuntu Condensed',
-				size:     n.points_fontsize
-			});
-			points_text[i].center(point_calc.x(n.points_r, i*n.segment_rotation),
-														point_calc.y(n.points_r, i*n.segment_rotation) );
+			set_attr.points(points_text[i],i);	
 		}
 
 		var bull = draw.circle().radius(n.bull_r);
@@ -205,6 +197,17 @@ set_attr.bullseye = function (shape) {
 	shape.fill(c.bullseye);
 	shape.data({value: n.bullseye_val});
 	set_attr.mouseevents(shape);
+};
+
+set_attr.points = function (text, i) {
+	text.fill(c.main_segment_odd);
+	text.font({
+		// there won't be any nice font. Google Fonts and trying to
+		// make it work with svgjs defeated me :(
+		size:     n.points_fontsize
+	});
+	text.center(point_calc.x(n.points_r, i*n.segment_rotation),
+							point_calc.y(n.points_r, i*n.segment_rotation) );
 };
 
 var lightup = function() {
