@@ -25,7 +25,7 @@ function drawingTest() {
 			set_attr.mult3(mult3_segments[i], i);
 
 			points_text[i] = draw.text(n.values[i].toString());
-			set_attr.points(points_text[i],i);	
+			set_attr.points(points_text[i],i);
 		}
 
 		var bull = draw.circle().radius(n.bull_r);
@@ -204,6 +204,9 @@ set_attr.points = function (text, i) {
 	text.font({
 		// there won't be any nice font. Google Fonts and trying to
 		// make it work with svgjs defeated me :(
+		// OK, let's just try with fonts not looking so bad with
+		// fallbacks set.
+		family: "'Ubuntu Condensed', 'Seorge UI Semilight', sans-serif",
 		size:     n.points_fontsize
 	});
 	text.center(point_calc.x(n.points_r, i*n.segment_rotation),
