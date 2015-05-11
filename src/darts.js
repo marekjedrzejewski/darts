@@ -206,7 +206,7 @@ set_attr.points = function (text, i) {
 		// make it work with svgjs defeated me :(
 		// OK, let's just try with fonts not looking so bad with
 		// fallbacks set.
-		family: "'Ubuntu Condensed', 'Seorge UI Semilight', sans-serif",
+		family: "Ubuntu Condensed, Segoe UI Semilight, sans-serif",
 		size:     n.points_fontsize
 	});
 	text.center(point_calc.x(n.points_r, i*n.segment_rotation),
