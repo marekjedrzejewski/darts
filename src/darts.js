@@ -11,6 +11,16 @@ function drawingTest() {
 		var mult3_segments = [];
 		var points_text = [];
 
+		// numbers are generated before everything else to cover them
+		// from being selected with transparent mask
+		for (var i = 0; i < n.segments; i++) {
+			points_text[i] = draw.text(n.values[i].toString());
+			set_attr.points(points_text[i],i);
+		}
+		// and here's the mask
+		var outerboard_mask = draw.circle(n.scale);
+		set_attr.outerboard_mask(outerboard_mask, outerboard);
+
 		// Generating segments of the board and its events and attributes
 		for (var i = 0; i < n.segments; i++) {
 			main_segments[i] = draw.path(main_segment_shape);
@@ -23,9 +33,6 @@ function drawingTest() {
 			mult3_segments[i] = draw.path(generateSegmentPart(
 																		n.mult3_out_r, n.mult3_in_r));
 			set_attr.mult3(mult3_segments[i], i);
-
-			points_text[i] = draw.text(n.values[i].toString());
-			set_attr.points(points_text[i],i);
 		}
 
 		var bull = draw.circle().radius(n.bull_r);
@@ -78,6 +85,7 @@ var c = {
 };
 c.bull = c.mult_segment_odd;
 c.bullseye = c.mult_segment_even;
+c.points = c.main_segment_odd;
 
 // functions returning x and y based on angle and distance
 // from center. Angle 0 is understood as straight up.
@@ -160,6 +168,11 @@ set_attr.mouseevents = function(shape) {
 	shape.mouseout(lightdown);
 };
 
+set_attr.maskmouseevents = function(mask, shape) {
+	mask.mouseover(function() {lightupshape(shape);});
+	mask.mouseout(function() {lightdownshape(shape);});
+};
+
 set_attr.main = function(segment, i) {
 	set_attr.mouseevents(segment);
 	segment.rotate(n.segment_rotation*i, n.center, n.center);
@@ -182,7 +195,11 @@ set_attr.mult3 = function(segment, i) {
 set_attr.outerboard = function(shape) {
 	shape.fill(c.outerboard);
 	shape.data({value: n.missed_val});
-	set_attr.mouseevents(shape);
+};
+
+set_attr.outerboard_mask = function(mask, shape) {
+	mask.opacity(0.00);
+	set_attr.maskmouseevents(mask, shape);
 };
 
 set_attr.bull = function (shape) {
@@ -200,19 +217,21 @@ set_attr.bullseye = function (shape) {
 };
 
 set_attr.points = function (text, i) {
-	text.fill(c.main_segment_odd);
+	text.fill(c.points);
 	text.font({
 		// there won't be any nice font. Google Fonts and trying to
 		// make it work with svgjs defeated me :(
 		// OK, let's just try with fonts not looking so bad with
 		// fallbacks set.
-		family: "Ubuntu Condensed, Segoe UI Semilight, sans-serif",
+		family: "Ubuntu Condensed, Segoe UI Semilight," +
+						"HelveticaNeueCondensed, sans-serif",
 		size:     n.points_fontsize
 	});
 	text.center(point_calc.x(n.points_r, i*n.segment_rotation),
 							point_calc.y(n.points_r, i*n.segment_rotation) );
 };
 
+// TODO? Maybe replacisng filters with fill colors will be better?
 var lightup = function() {
 	this.filter(function(add) {
 		add.componentTransfer({
@@ -221,8 +240,24 @@ var lightup = function() {
 	});
 };
 
+var lightupshape = function(shape) {
+	shape.filter(function(add) {
+		add.componentTransfer({
+			rgb: { type: 'linear', slope: 5.0}
+		});
+	});
+};
+
 var lightdown = function() {
 	this.filter(function(add) {
+		add.componentTransfer({
+			rgb: { type: 'linear', slope: 1.0}
+		});
+	});
+};
+
+var lightdownshape = function(shape) {
+	shape.filter(function(add) {
 		add.componentTransfer({
 			rgb: { type: 'linear', slope: 1.0}
 		});
