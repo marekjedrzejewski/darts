@@ -22,7 +22,7 @@ function drawingTest() {
 		set_attr.outerboard_mask(outerboard_mask, outerboard);
 
 		// Generating segments of the board and its events and attributes
-		for (var i = 0; i < n.segments; i++) {
+		for (i = 0; i < n.segments; i++) {
 			main_segments[i] = draw.path(main_segment_shape);
 			set_attr.main(main_segments[i], i);
 
@@ -78,13 +78,20 @@ n.missed_val = 0;
 // c is for colors
 var c = {
 	outerboard: "#1b0d24",
+	outerboard_lit: "#2c0f42",
 	main_segment_odd: "#f0ebd6",
+	main_segment_odd_lit: "#fefefe",
 	main_segment_even: "#1a2119",
+	main_segment_even_lit: "#2d382b",
 	mult_segment_odd: "#5a9136",
-	mult_segment_even: "#b00e2c"
+	mult_segment_odd_lit: "#6ab234",
+	mult_segment_even: "#b00e2c",
+	mult_segment_even_lit: "#d4002d"
 };
 c.bull = c.mult_segment_odd;
+c.bull_lit = c.mult_segment_odd_lit;
 c.bullseye = c.mult_segment_even;
+c.bullseye_lit = c.mult_segment_even_lit;
 c.points = c.main_segment_odd;
 
 // functions returning x and y based on angle and distance
@@ -176,25 +183,45 @@ set_attr.maskmouseevents = function(mask, shape) {
 set_attr.main = function(segment, i) {
 	set_attr.mouseevents(segment);
 	segment.rotate(n.segment_rotation*i, n.center, n.center);
-	segment.data({value: n.values[i]});
-	segment.fill(color_main_segments(i));
+	segment.data({
+		value: n.values[i],
+		type: "main",
+		color: color_calculator.main(i),
+		color_lit: color_calculator.main_lit(i)
+		});
+	segment.fill(segment.data('color'));
 };
 
 set_attr.mult2 = function(segment, i) {
 	set_attr.main(segment, i);
-	segment.fill(color_mult_segments(i));
-	segment.data({value: segment.data('value')*2});
+	segment.data({
+		value: segment.data('value')*2,
+		type: "mult2",
+		color: color_calculator.mult(i),
+		color_lit: color_calculator.mult_lit(i)
+		});
+	segment.fill(segment.data('color'));
 };
 
 set_attr.mult3 = function(segment, i) {
 	set_attr.main(segment, i);
-	segment.fill(color_mult_segments(i));
-	segment.data({value: segment.data('value')*3});
+	segment.data({
+		value: segment.data('value')*3,
+		type: "mult3",
+		color: color_calculator.mult(i),
+		color_lit: color_calculator.mult_lit(i)
+		});
+	segment.fill(segment.data('color'));
 };
 
 set_attr.outerboard = function(shape) {
-	shape.fill(c.outerboard);
-	shape.data({value: n.missed_val});
+	shape.data({
+		value: n.missed_val,
+		type: "mult2",
+		color: c.outerboard,
+		color_lit: c.outerboard_lit
+		});
+	shape.fill(shape.data('color'));
 };
 
 set_attr.outerboard_mask = function(mask, shape) {
@@ -204,15 +231,25 @@ set_attr.outerboard_mask = function(mask, shape) {
 
 set_attr.bull = function (shape) {
 	shape.center(n.center, n.center);
-	shape.fill(c.bull);
-	shape.data({value: n.bull_val});
+	shape.data({
+		value: n.bull_val,
+		type: "bull",
+		color: c.bull,
+		color_lit: c.bull_lit
+		});
+	shape.fill(shape.data('color'));
 	set_attr.mouseevents(shape);
 };
 
 set_attr.bullseye = function (shape) {
 	shape.center(n.center, n.center);
-	shape.fill(c.bullseye);
-	shape.data({value: n.bullseye_val});
+	shape.data({
+		value: n.bullseye_val,
+		type: "bullseye",
+		color: c.bullseye,
+		color_lit: c.bullseye_lit
+		});
+	shape.fill(shape.data('color'));
 	set_attr.mouseevents(shape);
 };
 
@@ -233,52 +270,54 @@ set_attr.points = function (text, i) {
 
 // TODO? Maybe replacisng filters with fill colors will be better?
 var lightup = function() {
-	this.filter(function(add) {
-		add.componentTransfer({
-			rgb: { type: 'linear', slope: 5.0}
-		});
-	});
+	this.fill(this.data('color_lit'));
 };
 
 var lightupshape = function(shape) {
-	shape.filter(function(add) {
-		add.componentTransfer({
-			rgb: { type: 'linear', slope: 5.0}
-		});
-	});
+	shape.fill(shape.data('color_lit'));
 };
 
 var lightdown = function() {
-	this.filter(function(add) {
-		add.componentTransfer({
-			rgb: { type: 'linear', slope: 1.0}
-		});
-	});
+	this.fill(this.data('color'));
 };
 
 var lightdownshape = function(shape) {
-	shape.filter(function(add) {
-		add.componentTransfer({
-			rgb: { type: 'linear', slope: 1.0}
-		});
-	});
+	shape.fill(shape.data('color'));
 };
 
-
-function color_main_segments(i) {
+var color_calculator = {};
+color_calculator.main = function(i) {
 	if (i % 2 === 0) {
 		return c.main_segment_even;
 	}
 	else {
 		return c.main_segment_odd;
 	}
-}
+};
 
-function color_mult_segments(i) {
+color_calculator.main_lit = function(i) {
+	if (i % 2 === 0) {
+		return c.main_segment_even_lit;
+	}
+	else {
+		return c.main_segment_odd_lit;
+	}
+};
+
+color_calculator.mult = function(i) {
 	if (i % 2 === 0) {
 		return c.mult_segment_even;
 	}
 	else {
 		return c.mult_segment_odd;
 	}
-}
+};
+
+color_calculator.mult_lit = function(i) {
+	if (i % 2 === 0) {
+		return c.mult_segment_even_lit;
+	}
+	else {
+		return c.mult_segment_odd_lit;
+	}
+};
