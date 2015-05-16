@@ -1,7 +1,11 @@
-function drawingTest() {
+function engine() {
+	return angular.element(document.getElementById("score")).scope();
+}
+
+function drawBoard() {
 	if (SVG.supported) {
 
-		var draw = SVG('drawing').size(n.scale,n.scale);
+		var draw = SVG('board').size(n.scale,n.scale);
 
 		var outerboard = draw.circle(n.scale);
 		set_attr.outerboard(outerboard);
@@ -173,11 +177,23 @@ var set_attr = {};
 set_attr.mouseevents = function(shape) {
 	shape.mouseover(lightup);
 	shape.mouseout(lightdown);
+	shape.click(function() {
+		engine().score.darthit(
+							shape.data('value'),
+							shape.data('type')
+						);
+	});
 };
 
 set_attr.maskmouseevents = function(mask, shape) {
 	mask.mouseover(function() {lightupshape(shape);});
 	mask.mouseout(function() {lightdownshape(shape);});
+	mask.click(function() {
+		engine().score.darthit(
+							shape.data('value'),
+							shape.data('type')
+						);
+	});
 };
 
 set_attr.main = function(segment, i) {
@@ -217,7 +233,7 @@ set_attr.mult3 = function(segment, i) {
 set_attr.outerboard = function(shape) {
 	shape.data({
 		value: n.missed_val,
-		type: "mult2",
+		type: "miss",
 		color: c.outerboard,
 		color_lit: c.outerboard_lit
 		});
