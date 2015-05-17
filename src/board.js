@@ -90,7 +90,8 @@ var c = {
 	mult_segment_odd: "#5a9136",
 	mult_segment_odd_lit: "#6ab234",
 	mult_segment_even: "#b00e2c",
-	mult_segment_even_lit: "#d4002d"
+	mult_segment_even_lit: "#d4002d",
+	shot: "#ffcc00"
 };
 c.bull = c.mult_segment_odd;
 c.bull_lit = c.mult_segment_odd_lit;
@@ -178,6 +179,7 @@ set_attr.mouseevents = function(shape) {
 	shape.mouseover(lightup);
 	shape.mouseout(lightdown);
 	shape.click(function() {
+		indicateshot(shape);
 		engine().score.darthit(
 							shape.data('value'),
 							shape.data('type')
@@ -189,6 +191,7 @@ set_attr.maskmouseevents = function(mask, shape) {
 	mask.mouseover(function() {lightupshape(shape);});
 	mask.mouseout(function() {lightdownshape(shape);});
 	mask.click(function() {
+		indicateshot(shape);
 		engine().score.darthit(
 							shape.data('value'),
 							shape.data('type')
@@ -299,6 +302,10 @@ var lightdown = function() {
 
 var lightdownshape = function(shape) {
 	shape.fill(shape.data('color'));
+};
+
+var indicateshot = function(shape) {
+	shape.fill(c.shot);
 };
 
 var color_calculator = {};

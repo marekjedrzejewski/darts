@@ -4,6 +4,17 @@
   var doublein = true;
   var doubleout = true;
 
+  var players = [
+    {
+      points_left: pointsvariant,
+      darts_left: dartsperturn
+    },
+    {
+      points_left: pointsvariant,
+      darts_left: dartsperturn
+    }
+  ];
+
   var dart = angular.module('dart', []);
   dart.controller('scoretable', function($scope){
     // game preferences
@@ -12,41 +23,68 @@
     this.startpoints = pointsvariant;
 
     // this will go to player
-    this.points_left = this.startpoints;
-    this.darts_left = dartsperturn;
+    this.players = players;
+    // will represent which player turn is it
+    this.current = 0;
 
 
     this.darthit = function(points, type) {
       // starting block
-      if ( this.points_left === this.startpoints ) {
+      if ( this.players[this.current].points_left === this.startpoints ) {
         if (doublein) {
           if (type === 'mult2' || type === 'bullseye')
-            this.points_left -= points;
+            this.players[this.current].points_left -= points;
         }
         else { // if doublein is not enabled no need for checking type
-          this.points_left -= points;
+          this.players[this.current].points_left -= points;
         }
       }
 
       // midgame & ending block
       else {
-        // TODO ending 
-        if (doubleout) {
-          if (this.points_left - points <= 1) {
-            return;
+        // OMG THIS BLOCK. DISGUSTING.
+        if (this.players[this.current].points_left - points <= 1) {
+          if(doubleout) {
+            if (this.players[this.current].points_left - points === 0) {
+              if (type === 'mult2' || type === 'bullseye') {
+                this.players[this.current].points_left -= points;
+                // Player won
+              }
+              else { // Points reach 0, but shot is not double
+                // nothing
+              }
+            }
+            else { // points below zero
+              // nothing
+            }
           }
+          else {
+            if (this.players[this.current].points_left - points === 0) {
+              this.players[this.current].points_left -= points;
+              // Player won
+            }
+            else if (this.players[this.current].points_left - points === 1) {
+              this.players[this.current].points_left -= points;
+            }
+            else {
+              // nothing
+            }
+          }
+        // midgame
         }
         else {
-          if (this.points_left - points < 0) {
-            return;
-          }
+          this.players[this.current].points_left -= points;
         }
-        // midgame
-        this.points_left -= points;
       }
 
-
-      this.darts_left -= 1;
+      this.players[this.current].darts_left -= 1;
+      if (this.players[this.current].darts_left === 0) {
+        this.players[this.current].darts_left = dartsperturn;
+        this.current++;
+        if (this.current === this.players.length) {
+          this.current = 0;
+        }
+      }
 
       $scope.$apply(); // html need to be refreshed
     };
