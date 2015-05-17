@@ -1,5 +1,5 @@
 (function() {
-  var pointsvariant = 501;
+  var startpoints = 501;
   var dartsperturn = 3;
   var doublein = true;
   var doubleout = true;
@@ -7,32 +7,27 @@
   var players = [
     {
       name: 1,
-      points_left: pointsvariant,
+      points_left: startpoints,
       darts_left: dartsperturn
     },
     {
       name: 2,
-      points_left: pointsvariant,
+      points_left: startpoints,
       darts_left: dartsperturn
     }
   ];
 
   var dart = angular.module('dart', []);
   dart.controller('scoretable', function($scope){
-    // game preferences
-    this.doublein = doublein;
-    this.doubleout = doubleout;
-    this.startpoints = pointsvariant;
-
-    // this will go to player
     this.players = players;
     // will represent which player turn is it
     this.current = 0;
 
 
     this.darthit = function(points, type) {
+      this.players[this.current].darts_left -= 1;
       // starting block
-      if ( this.players[this.current].points_left === this.startpoints ) {
+      if ( this.players[this.current].points_left === startpoints ) {
         if (doublein) {
           if (type === 'mult2' || type === 'bullseye')
             this.players[this.current].points_left -= points;
@@ -53,11 +48,11 @@
                 // Player won
               }
               else { // Points reach 0, but shot is not double
-                // nothing
+                this.players[this.current].darts_left = 0;
               }
             }
             else { // points below zero
-              // nothing
+              this.players[this.current].darts_left = 0;
             }
           }
           else {
@@ -69,7 +64,7 @@
               this.players[this.current].points_left -= points;
             }
             else {
-              // nothing
+              this.players[this.current].darts_left = 0;
             }
           }
         // midgame
@@ -79,7 +74,7 @@
         }
       }
 
-      this.players[this.current].darts_left -= 1;
+
       if (this.players[this.current].darts_left === 0) {
         this.current++;
         if (this.current === this.players.length) {
