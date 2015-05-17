@@ -59,7 +59,8 @@ Math.radians = function(degrees) {
 
 // n is for numbers (meaning all numeric values used)
 var n = {
-	scale: window.innerHeight*0.8,
+	// to always fit in the window smaller number is taken
+	scale: Math.min(window.innerHeight, window.innerWidth)*0.8,
 	segments: 20,
 	segment_rotation: 18
 };

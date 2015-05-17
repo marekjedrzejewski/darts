@@ -3,13 +3,16 @@
   var dartsperturn = 3;
   var doublein = true;
   var doubleout = true;
+  var x = true;
 
   var players = [
     {
+      name: 1,
       points_left: pointsvariant,
       darts_left: dartsperturn
     },
     {
+      name: 2,
       points_left: pointsvariant,
       darts_left: dartsperturn
     }
@@ -79,11 +82,11 @@
 
       this.players[this.current].darts_left -= 1;
       if (this.players[this.current].darts_left === 0) {
-        this.players[this.current].darts_left = dartsperturn;
         this.current++;
         if (this.current === this.players.length) {
           this.current = 0;
         }
+        this.players[this.current].darts_left = dartsperturn;
       }
 
       $scope.$apply(); // html need to be refreshed
