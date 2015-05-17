@@ -3,7 +3,6 @@
   var dartsperturn = 3;
   var doublein = true;
   var doubleout = true;
-  var x = true;
 
   var players = [
     {
