@@ -4,86 +4,98 @@
   var doublein = true;
   var doubleout = true;
 
-  var players = [
-    {
-      name: 1,
-      points_left: startpoints,
-      darts_left: dartsperturn
-    },
-    {
-      name: 2,
-      points_left: startpoints,
-      darts_left: dartsperturn
-    }
-  ];
+  var players = [ ];
 
   var dart = angular.module('dart', []);
+
+  dart.controller('settings', function($scope) {
+    $scope.start_game = function() {
+      doublein = $scope.doublein;
+      doubleout = $scope.doubleout;
+      players.push( {
+                      name: 1,
+                      points_left: startpoints,
+                      darts_left: dartsperturn
+                    });
+      for (var i = 1; i < $scope.players; i++) {
+        players.push({
+                      name: i+1,
+                      points_left: startpoints,
+                      darts_left: 0
+                    });
+      }
+    };
+  });
+
   dart.controller('scoretable', function($scope){
-    this.players = players;
+    $scope.get_players = function() {
+      return players;
+    };
     // will represent which player turn is it
     this.current = 0;
 
 
     this.darthit = function(points, type) {
-      this.players[this.current].darts_left -= 1;
+      players[this.current].darts_left -= 1;
       // starting block
-      if ( this.players[this.current].points_left === startpoints ) {
+      if ( players[this.current].points_left === startpoints ) {
         if (doublein) {
           if (type === 'mult2' || type === 'bullseye')
-            this.players[this.current].points_left -= points;
+            players[this.current].points_left -= points;
         }
         else { // if doublein is not enabled no need for checking type
-          this.players[this.current].points_left -= points;
+          players[this.current].points_left -= points;
         }
       }
 
       // midgame & ending block
       else {
         // OMG THIS BLOCK. DISGUSTING.
-        if (this.players[this.current].points_left - points <= 1) {
+        if (players[this.current].points_left - points <= 1) {
           if(doubleout) {
-            if (this.players[this.current].points_left - points === 0) {
+            if (players[this.current].points_left - points === 0) {
               if (type === 'mult2' || type === 'bullseye') {
-                this.players[this.current].points_left -= points;
+                players[this.current].points_left -= points;
                 // Player won
               }
               else { // Points reach 0, but shot is not double
-                this.players[this.current].darts_left = 0;
+                players[this.current].darts_left = 0;
               }
             }
             else { // points below zero
-              this.players[this.current].darts_left = 0;
+              players[this.current].darts_left = 0;
             }
           }
           else {
-            if (this.players[this.current].points_left - points === 0) {
-              this.players[this.current].points_left -= points;
+            if (players[this.current].points_left - points === 0) {
+              players[this.current].points_left -= points;
               // Player won
             }
-            else if (this.players[this.current].points_left - points === 1) {
-              this.players[this.current].points_left -= points;
+            else if (players[this.current].points_left - points === 1) {
+              players[this.current].points_left -= points;
             }
             else {
-              this.players[this.current].darts_left = 0;
+              players[this.current].darts_left = 0;
             }
           }
         // midgame
         }
         else {
-          this.players[this.current].points_left -= points;
+          players[this.current].points_left -= points;
         }
       }
 
 
-      if (this.players[this.current].darts_left === 0) {
+      if (players[this.current].darts_left === 0) {
         this.current++;
-        if (this.current === this.players.length) {
+        if (this.current === players.length) {
           this.current = 0;
         }
-        this.players[this.current].darts_left = dartsperturn;
+        players[this.current].darts_left = dartsperturn;
       }
 
-      $scope.$apply(); // html need to be refreshed
+      $scope.$apply(); // html need to be refreshed, because function is called
+                       // from separate JS file in a somewhat hacky way.
     };
 
   });

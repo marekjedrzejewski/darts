@@ -10,13 +10,18 @@
 </head>
 
 <body onload="drawBoard()">
-	<div id="settings">
-		<!-- content that will be present on page load, and hiden after clicking start -->
+	<div id="settings" ng-hide="gameinprogress" ng-controller="settings">
+		Number of players: <input type="number" value=2 min=1 ng-model="players"></input> <br>
+		Double-in<input type="checkbox" ng-model="doublein"></input> <br>
+		Double-out<input type="checkbox" ng-model="doubleout"></input> <br>
+		<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
 	</div>
-	<div id="game"> <!-- To be hidden in the begining. -->
+	<div id="game">
 		<div id="board"></div>
+		<!-- Couldn't hide board along with scoretable due to some
+		bug that makes SVG text to move down. WTF? -->
 		<div id="score" ng-controller="scoretable as score">
-			<p ng-repeat="player in score.players">
+			<p ng-repeat="player in get_players()">
 				{{player.name}} <br>
 				Points left to score: {{player.points_left}} <br>
 				Darts left: {{player.darts_left}} <br>
