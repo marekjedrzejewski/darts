@@ -2,7 +2,7 @@ function engine() {
 	return angular.element(document.getElementById("score")).scope();
 }
 
-function drawBoard() {
+function draw_board() {
 	if (SVG.supported) {
 
 		var draw = SVG('board').size(n.scale,n.scale);
@@ -59,12 +59,12 @@ Math.radians = function(degrees) {
 
 // n is for numbers (meaning all numeric values used)
 var n = {
-	// to always fit in the window smaller number is taken
-	scale: Math.min(window.innerHeight, window.innerWidth)*0.8,
+	scalebase: 0.6,
 	segments: 20,
 	segment_rotation: 18
 };
-// I can't do that inside :(
+// to always fit in the window smaller number is taken
+n.scale = Math.min(window.innerHeight, window.innerWidth)*n.scalebase;
 n.center = n.scale/2;
 n.main_r = n.scale*0.42;
 n.mult2_out_r = n.main_r;

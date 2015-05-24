@@ -6,6 +6,8 @@
 
   var players = [ ];
 
+  var winner = -1;
+
   var dart = angular.module('dart', []);
 
   dart.controller('settings', function($scope) {
@@ -27,7 +29,7 @@
     };
   });
 
-  dart.controller('scoretable', function($scope){
+  dart.controller('score_table', function($scope){
     $scope.get_players = function() {
       return players;
     };
@@ -57,6 +59,7 @@
               if (type === 'mult2' || type === 'bullseye') {
                 players[this.current].points_left -= points;
                 // Player won
+                winner = this.current + 1;
               }
               else { // Points reach 0, but shot is not double
                 players[this.current].darts_left = 0;
@@ -70,6 +73,7 @@
             if (players[this.current].points_left - points === 0) {
               players[this.current].points_left -= points;
               // Player won
+              winner = this.current + 1;
             }
             else if (players[this.current].points_left - points === 1) {
               players[this.current].points_left -= points;
@@ -99,4 +103,11 @@
     };
 
   });
+
+  dart.controller('game_controller', function($scope) {
+    $scope.get_winner = function() {
+      return winner;
+    };
+  });
+
 })();

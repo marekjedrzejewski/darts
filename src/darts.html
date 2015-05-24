@@ -9,24 +9,28 @@
 	<title>darts</title>
 </head>
 
-<body onload="drawBoard()">
+<body onload="draw_board()">
 	<div id="settings" ng-hide="gameinprogress" ng-controller="settings">
 		Number of players: <input type="number" value=2 min=1 ng-model="players"></input> <br>
 		Double-in<input type="checkbox" ng-model="doublein"></input> <br>
 		Double-out<input type="checkbox" ng-model="doubleout"></input> <br>
 		<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
 	</div>
-	<div id="game">
+	<div id="game" ng-controller="game_controller" ng-hide="get_winner() != -1">
 		<div id="board"></div>
 		<!-- Couldn't hide board along with scoretable due to some
 		bug that makes SVG text to move down. WTF? -->
-		<div id="score" ng-controller="scoretable as score">
+		<div id="score" ng-controller="score_table as score">
 			<p ng-repeat="player in get_players()">
 				{{player.name}} <br>
 				Points left to score: {{player.points_left}} <br>
 				Darts left: {{player.darts_left}} <br>
 			</p>
 		</div>
+	</div>
+	<div id="gameover" ng-controller="game_controller" ng-show="get_winner() != -1">
+		Player {{get_winner()}} won!
+		<button onclick="history.go(0)">New Game</button>
 	</div>
 </body>
 
