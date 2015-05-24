@@ -7,6 +7,7 @@
   var players = [ ];
 
   var winner = -1;
+  var show_board = false;
 
   var dart = angular.module('dart', []);
 
@@ -26,6 +27,7 @@
                       darts_left: 0
                     });
       }
+      show_board = true;
     };
   });
 
@@ -107,6 +109,9 @@
   dart.controller('game_controller', function($scope) {
     $scope.get_winner = function() {
       return winner;
+    };
+    $scope.show_board = function() {
+      return show_board;
     };
   });
 
