@@ -4,33 +4,61 @@
 	<meta charset="UTF-8">
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
 	<script src="https://cdn.rawgit.com/wout/svg.js/master/dist/svg.min.js"></script>
+
+	<!-- Let's try with bootstrap! -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<style>
+	body {
+	    background-color: #526474;
+	}
+	.container {
+		background-color: #ffffff;
+		margin-top: 1%;
+		padding: 3%;
+	}
+	</style>
+
 	<script src="engine.js"></script>
 	<script src="board.js"></script>
 	<title>darts</title>
 </head>
 
 <body onload="draw_board()">
-	<div id="settings" ng-hide="gameinprogress" ng-controller="settings">
-		Number of players: <input type="number" value=2 min=1 ng-model="players"></input> <br>
-		Double-in<input type="checkbox" ng-model="doublein"></input> <br>
-		Double-out<input type="checkbox" ng-model="doubleout"></input> <br>
-		<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
-	</div>
-	<div id="game" ng-controller="game_controller" ng-hide="get_winner() != -1">
-		<div id="board"></div>
-		<!-- Couldn't hide board along with scoretable due to some
-		bug that makes SVG text to move down. WTF? -->
-		<div id="score" ng-controller="score_table as score">
-			<p ng-repeat="player in get_players()">
-				{{player.name}} <br>
-				Points left to score: {{player.points_left}} <br>
-				Darts left: {{player.darts_left}} <br>
-			</p>
+
+	<div class="container">
+
+		<div id="game" ng-controller="game_controller" ng-hide="get_winner() != -1">
+
+			<div id="board" class="col-sm-8"></div>
+			<!-- Couldn't hide board along with scoretable due to some
+			bug that makes SVG text to move down. -->
+
+			<div id="score"  class="col-sm-4" ng-controller="score_table as score">
+				<p ng-repeat="player in get_players()">
+					{{player.name}} <br>
+					Points left to score: {{player.points_left}} <br>
+					Darts left: {{player.darts_left}} <br>
+				</p>
+			</div>
+
+			<div id="settings" class="col-sm-4" ng-hide="gameinprogress" ng-controller="settings">
+				Number of players: <input type="number" value=2 min=1 ng-model="players"></input> <br>
+				Double-in <input type="checkbox" ng-model="doublein"></input> <br>
+				Double-out <input type="checkbox" ng-model="doubleout"></input> <br>
+				<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
+			</div>
+			
 		</div>
-	</div>
-	<div id="gameover" ng-controller="game_controller" ng-show="get_winner() != -1">
-		Player {{get_winner()}} won!
-		<button onclick="history.go(0)">New Game</button>
+
+		<div id="gameover" ng-controller="game_controller" ng-show="get_winner() != -1">
+			Player {{get_winner()}} won!
+			<button onclick="history.go(0)">New Game</button>
+		</div>
+
 	</div>
 </body>
 

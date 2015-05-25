@@ -6,6 +6,8 @@ function draw_board() {
 	if (SVG.supported) {
 
 		var draw = SVG('board').size(n.scale,n.scale);
+		draw.id("svgboard");
+		draw.viewbox(0,0,n.scale,n.scale); // This allows scaling with width/height
 
 		var outerboard = draw.circle(n.scale);
 		set_attr.outerboard(outerboard);
@@ -44,6 +46,8 @@ function draw_board() {
 
 		var bullseye = draw.circle().radius(n.bullseye_r);
 		set_attr.bullseye(bullseye);
+
+		draw.size('100%', '100%'); // Makes the board responsive. Yaay <3
 	}
 	else {
 		alert('SVG not supported');
@@ -59,12 +63,10 @@ Math.radians = function(degrees) {
 
 // n is for numbers (meaning all numeric values used)
 var n = {
-	scalebase: 0.6,
+	scale: 1000000, // now that it's 100%x100% it only sets precision
 	segments: 20,
 	segment_rotation: 18
 };
-// to always fit in the window smaller number is taken
-n.scale = Math.min(window.innerHeight, window.innerWidth)*n.scalebase;
 n.center = n.scale/2;
 n.main_r = n.scale*0.42;
 n.mult2_out_r = n.main_r;
