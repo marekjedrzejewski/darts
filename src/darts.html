@@ -47,7 +47,7 @@
 			</div>
 
 			<div id="settings" class="col-sm-4" ng-hide="gameinprogress" ng-controller="settings">
-				Number of players: <input type="number" value=2 min=1 ng-model="players"></input> <br>
+				Number of players: <input type="number" min=1 ng-init="players=2" ng-model="players"></input> <br>
 				Double-in <input type="checkbox" ng-model="doublein"></input> <br>
 				Double-out <input type="checkbox" ng-model="doubleout"></input> <br>
 				<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
