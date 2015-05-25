@@ -18,6 +18,7 @@
 	.container {
 		background-color: #ffffff;
 		margin-top: 1%;
+		max-width: 30cm;
 		padding: 3%;
 	}
 	</style>
@@ -51,7 +52,7 @@
 				Double-out <input type="checkbox" ng-model="doubleout"></input> <br>
 				<button type="submit" ng-click="start_game(); gameinprogress = true">Start</button>
 			</div>
-			
+
 		</div>
 
 		<div id="gameover" ng-controller="game_controller" ng-show="get_winner() != -1">
