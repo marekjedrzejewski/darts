@@ -1,0 +1,23 @@
+body {
+    background-color: #526474;
+}
+.container {
+  background-color: #ffffff;
+  margin-top: 1%;
+  max-width: 30cm;
+  padding: 3%;
+}
+
+.test {
+  background-color: #ffcc00;
+}
+
+/* mad clicking doesn't select numbers now */
+svg text {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
