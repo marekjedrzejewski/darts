@@ -150,7 +150,7 @@ var main_segment_shape =
 		seg_gen.leftY(n.main_r) + ' ' +
 		'A' + // arc to
 		n.main_r + ',' + n.main_r +
-		' 0 0,1 ' +
+		' 0 0, 1 ' +
 		// right point
 		seg_gen.rightX(n.main_r) + ',' +
 		seg_gen.rightY(n.main_r);
@@ -162,7 +162,7 @@ function generateSegmentPart(outlen, inlen) {
 		seg_gen.leftY(outlen) + ' ' +
 		'A' +
 		outlen + ',' + outlen +
-		' 0 0,1' +
+		' 0 0, 1 ' +
 		seg_gen.rightX(outlen) + ',' +
 		seg_gen.rightY(outlen) + ' ' +
 		'L' +
@@ -170,7 +170,7 @@ function generateSegmentPart(outlen, inlen) {
 		seg_gen.rightY(inlen) + ' ' +
 		'A' +
 		inlen + ',' + inlen +
-		' 0 0,0' +
+		' 0 0, 0 ' +
 		seg_gen.leftX(inlen) + ',' +
 		seg_gen.leftY(inlen);
 
@@ -290,7 +290,6 @@ set_attr.points = function (text, i) {
 							point_calc.y(n.points_r, i*n.segment_rotation) );
 };
 
-// TODO? Maybe replacisng filters with fill colors will be better?
 var lightup = function() {
 	this.fill(this.data('color_lit'));
 };
