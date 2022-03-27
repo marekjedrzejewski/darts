@@ -1,4 +1,3 @@
 # darts
 
-SkyGate internship asignment.
-moreover: good one to learn cool new things.
+Dart board with scoreboard to keep track of the game (using screen and real darts not recommended)
